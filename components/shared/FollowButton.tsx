@@ -1,5 +1,6 @@
 import { StyledImage } from "components/ProfilePage/StyledProfileComponents"
 import { useTranslation } from "next-i18next"
+import { useRouter } from "next/router"
 import { useEffect, useContext, useMemo, useState } from "react"
 import { Button } from "react-bootstrap"
 import { useAuth } from "../auth"
@@ -88,6 +89,7 @@ export const BaseFollowButton = ({
 }) => {
   const { t } = useTranslation("common")
   const uid = useAuth().user?.uid
+  const router = useRouter()
   const { followStatus, setFollowStatus } = useContext(FollowContext)
   const [modalAction, setModalAction] = useState<"follow" | "unfollow" | null>(
     null
@@ -111,9 +113,12 @@ export const BaseFollowButton = ({
   }
 
   const isFollowing = followStatus[topicName]
-  const onClick = isFollowing
+  const goToLogin = () =>
+    router.push(`/login?redirect=${encodeURIComponent(router.asPath)}`)
+  const followOrUnfollowClick = isFollowing
     ? () => (confirmUnfollow ? setModalAction("unfollow") : UnfollowClick())
     : () => (confirmFollow ? setModalAction("follow") : FollowClick())
+  const onClick = uid ? followOrUnfollowClick : goToLogin
 
   return (
     <>

@@ -6,6 +6,7 @@ import { formUrl } from "components/publish"
 import { FC, ReactElement, useContext, useEffect, useState } from "react"
 import { useCurrentTestimonyDetails } from "./testimonyDetailSlice"
 import { useTranslation } from "next-i18next"
+import { useRouter } from "next/router"
 import { useAuth } from "components/auth"
 import {
   ballotQuestionTopicName,
@@ -56,6 +57,7 @@ export const PolicyActions: FC<React.PropsWithChildren<PolicyActionsProps>> = ({
 
   const { user } = useAuth()
   const uid = user?.uid
+  const router = useRouter()
   const ballotQuestionId = revision.ballotQuestionId ?? undefined
   const ballotQuestionTopic = ballotQuestionId
     ? { court: bill.court, id: ballotQuestionId }
@@ -137,8 +139,14 @@ export const PolicyActions: FC<React.PropsWithChildren<PolicyActionsProps>> = ({
   const checkmark = isFollowing ? (
     <StyledImage src="/check-white.svg" alt="" />
   ) : null
+  const goToLogin = () =>
+    router.push(`/login?redirect=${encodeURIComponent(router.asPath)}`)
   const handleClick = (event: React.MouseEvent<Element, MouseEvent>) => {
     event.preventDefault()
+    if (!uid) {
+      goToLogin()
+      return
+    }
     isFollowing ? UnfollowClick() : FollowClick()
   }
 

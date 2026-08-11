@@ -153,7 +153,9 @@ describe("PolicyActions", () => {
     )
 
     await waitFor(() => {
-      expect(push).toHaveBeenCalledWith("/login?redirect=%2Ftestimony%2Fabc%2F1")
+      expect(push).toHaveBeenCalledWith(
+        "/login?redirect=%2Ftestimony%2Fabc%2F1"
+      )
     })
 
     expect(mockFollowBallotQuestion).not.toHaveBeenCalled()
